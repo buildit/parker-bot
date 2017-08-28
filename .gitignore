@@ -1,0 +1,10 @@
+build
+config.json
+**/.DS_Store
+.vscode
+.settings
+.gradle
+.project
+.classpath
+/tools
+/bin
