@@ -80,7 +80,7 @@ public class SlackTest{
 		byUsernameField.setAccessible(true);
 		SlackTest.slackUsersByUsername = (HashMap<String, String>) byUsernameField.get(slack);
 		
-		SlackTest.slack.notifyUserViaSlack("validName1@test.com", "Hello");
+		SlackTest.slack.notifyUserViaSlack("validname1@test.com", "Hello");
 		SlackTest.slack.notifyUserViaSlack("v2@test.com", "Hello");
 	}
 
@@ -89,7 +89,7 @@ public class SlackTest{
 		assertEquals(
 				"It gets the correct slack id for the first valid user",
 				"valid1SlackId",
-				SlackTest.slackUsersByEmail.get("validName1@test.com"));
+				SlackTest.slackUsersByEmail.get("validname1@test.com"));
 	}
 	
 	@Test
@@ -97,7 +97,7 @@ public class SlackTest{
 		assertEquals(
 				"It gets the correct slack id for the second valid user",
 				"valid2SlackId",
-				SlackTest.slackUsersByEmail.get("validName2@test.com"));
+				SlackTest.slackUsersByEmail.get("validname2@test.com"));
 	}
 
 	@Test

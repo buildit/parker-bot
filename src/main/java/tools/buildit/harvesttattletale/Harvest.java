@@ -101,8 +101,8 @@ public class Harvest {
         stream
                 .filter(o -> o.getBoolean("is_active") == true)
                 .forEach(o -> {
-                    this.usersIdToEmails.put(o.getInt("id"), o.getString("email"));
-                    this.userEmailsToNames.put(o.getString("email"), o.getString("first_name") + " " + o.getString("last_name"));
+                    this.usersIdToEmails.put(o.getInt("id"), o.getString("email").toLowerCase());
+                    this.userEmailsToNames.put(o.getString("email").toLowerCase(), o.getString("first_name") + " " + o.getString("last_name"));
                 });
     }
     

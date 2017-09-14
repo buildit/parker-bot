@@ -40,7 +40,7 @@ public class Slack {
                 .filter(o -> o.getJSONObject("profile").has("email"))
                 .filter(o -> o.getBoolean("is_bot") == false)
                 .forEach(o -> {
-                    this.slackUsersByEmail.put(o.getJSONObject("profile").getString("email"), o.getString("id"));
+                    this.slackUsersByEmail.put(o.getJSONObject("profile").getString("email").toLowerCase(), o.getString("id"));
                     this.slackUsersByUsername.put(o.getString("name"), o.getString("id"));
                 });
     }
