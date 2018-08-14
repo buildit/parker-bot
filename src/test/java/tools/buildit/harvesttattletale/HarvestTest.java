@@ -26,8 +26,8 @@ import com.mashape.unirest.request.HttpRequest;
 @SuppressWarnings("unchecked")
 public class HarvestTest {
 	private static Harvest harvest;
-    private static String saturday;
     private static String sunday;
+    private static String monday;
     private static HashMap<String, String> usersIdToEmails;
 	private static HashMap<String, String> userEmailsToNames;
 	private static ConcurrentHashMap<String, String> flaggedUsers;
@@ -38,10 +38,10 @@ public class HarvestTest {
 		// Get the dates right
 		LocalDate now = LocalDate.now();
 		DateTimeFormatter harvestDateFormatter = DateTimeFormatter.ofPattern("YYYYMMdd");
-        LocalDate saturdayTemp = now.with(TemporalAdjusters.previousOrSame(DayOfWeek.SATURDAY));
-        LocalDate sundayTemp = saturdayTemp.with(TemporalAdjusters.previous(DayOfWeek.SUNDAY));
-        HarvestTest.saturday = harvestDateFormatter.format(saturdayTemp);
+        LocalDate sundayTemp = now.with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY));
+        LocalDate mondayTemp = sundayTemp.with(TemporalAdjusters.previous(DayOfWeek.MONDAY));
         HarvestTest.sunday = harvestDateFormatter.format(sundayTemp);
+        HarvestTest.monday = harvestDateFormatter.format(mondayTemp);
         
         // User ConfigStub in place of Config and SlackStub in place of Slack
      	Injector injector = Guice.createInjector(new AbstractModule() {
@@ -142,6 +142,6 @@ public class HarvestTest {
 	}
 	
 	private static String formHarvestIndividualEndpoint(int userId) {
-        return String.format("people/%d/entries?from=%s&to=%s", userId, HarvestTest.sunday, HarvestTest.saturday);
+        return String.format("people/%d/entries?from=%s&to=%s", userId, HarvestTest.monday, HarvestTest.sunday);
     }
 }

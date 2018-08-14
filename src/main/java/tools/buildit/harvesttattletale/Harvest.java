@@ -33,16 +33,16 @@ public class Harvest {
     private HashMap<Integer, String> usersIdToEmails;
     private HashMap<String, String> userEmailsToNames;
     private ConcurrentHashMap<String, Double> flaggedUsers;
-    private final LocalDate saturday;
     private final LocalDate sunday;
+    private final LocalDate monday;
     private final DateTimeFormatter harvestDateFormatter;
    
     public Harvest() {
         LocalDate now = LocalDate.now();
-        saturday = now.with(TemporalAdjusters.previousOrSame(DayOfWeek.SATURDAY)) ;
-        sunday = saturday.with(TemporalAdjusters.previous(DayOfWeek.SUNDAY));
+        sunday = now.with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY)) ;
+        monday = sunday.with(TemporalAdjusters.previous(DayOfWeek.MONDAY));
         harvestDateFormatter = DateTimeFormatter.ofPattern("YYYYMMdd");
-        System.out.println(String.format("Analyzing from %s to %s", this.saturday, this.sunday));
+        System.out.println(String.format("Analyzing from %s to %s", this.monday, this.sunday));
     }
     
     public void getAndChideUsers() throws Exception {
@@ -55,7 +55,6 @@ public class Harvest {
                 .forEach(entry -> {
                     LocalDateTime start = LocalDateTime.now();
                     System.out.println(String.format("Sending notification to %s", this.userEmailsToNames.get(entry.getKey())));
-                    LocalDate monday = this.sunday.with(TemporalAdjusters.next(DayOfWeek.MONDAY));
                     String url = String.format("https://builditglobal.harvestapp.com/time/week/%s", monday.format(DateTimeFormatter.ofPattern("YYYY/MM/dd")));
                     String message;
                     if (entry.getValue() == 0.0) {
@@ -135,7 +134,7 @@ public class Harvest {
     
     private String formHarvestIndividualEndpoint(int userId) {
         return String.format("people/%d/entries?from=%s&to=%s", userId,
-                this.harvestDateFormatter.format(this.sunday),
-                this.harvestDateFormatter.format(this.saturday));
+                this.harvestDateFormatter.format(this.monday),
+                this.harvestDateFormatter.format(this.sunday));
     }
 }
