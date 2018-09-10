@@ -7,6 +7,9 @@ package tools.buildit.harvesttattletale;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+
+import java.io.BufferedWriter;
+import java.nio.Buffer;
 import java.util.HashMap;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -21,6 +24,7 @@ public class Slack {
     @Inject private Config config;
     private HashMap<String, String> slackUsersByEmail;
     private HashMap<String, String> slackUsersByUsername;
+    private HashMap<String, String> slackDisplayNamesByEmail;
     
     public synchronized void getSlackUsers() throws Exception {
         System.out.println("Loading slack information");
@@ -33,6 +37,7 @@ public class Slack {
                 .map(o -> (JSONObject) o);
         
         this.slackUsersByEmail = new HashMap<String, String>();
+        this.slackDisplayNamesByEmail = new HashMap<>();
         this.slackUsersByUsername = new HashMap<String, String>();
         
         stream
@@ -42,10 +47,11 @@ public class Slack {
                 .forEach(o -> {
                     this.slackUsersByEmail.put(o.getJSONObject("profile").getString("email").toLowerCase(), o.getString("id"));
                     this.slackUsersByUsername.put(o.getString("name"), o.getString("id"));
+                    this.slackDisplayNamesByEmail.put(o.getJSONObject("profile").getString("email").toLowerCase(), o.getString("name"));
                 });
     }
     
-    public void notifyUserViaSlack(String email, String message) throws Exception {
+    public void notifyUserViaSlack(String email, String message, BufferedWriter bw) throws Exception {
         HashMap<String, String> emailMap = config.getEmailSlackNames();
         String slackId = null;
         if (this.slackUsersByEmail.containsKey(email)) {
@@ -59,6 +65,9 @@ public class Slack {
             }
         }
         if (slackId != null) {
+            if (this.slackDisplayNamesByEmail.containsKey((email))) {
+                bw.append("@" + this.slackDisplayNamesByEmail.get(email) + "\n");
+            }
             HashMap<String, Object> imOpen = new HashMap<String, Object>();
             imOpen.put("user", slackId);
             String channel = this.config.getSlackUnirestGet("im.open", imOpen)

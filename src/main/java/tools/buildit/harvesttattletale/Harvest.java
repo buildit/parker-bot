@@ -8,6 +8,9 @@ package tools.buildit.harvesttattletale;
 import com.google.inject.Inject;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -51,6 +54,8 @@ public class Harvest {
         int timeBetweenSlackMessages = config.getTimeBetweenSlackMessages();
         System.out.println("Starting notifications, slack limits us to 1 per second, be patient");
         ArrayList<String> errors = new ArrayList<String>();
+        BufferedWriter writer = new BufferedWriter(new FileWriter("at-names"));
+        writer.write("");
         this.flaggedUsers.entrySet().stream()
                 .forEach(entry -> {
                     LocalDateTime start = LocalDateTime.now();
@@ -68,17 +73,18 @@ public class Harvest {
                     }
                     message = String.format("%s If you believe you received this message in error, please contact <@U59MY6JL8|parker>. If unsure where to book time to, ask in <#C38GDS7QE|buildit_ops>", message);
                     try {
-                        this.slack.notifyUserViaSlack(entry.getKey(), message);
+                        this.slack.notifyUserViaSlack(entry.getKey(), message, writer);
                         LocalDateTime end = LocalDateTime.now();
                         long difference = timeBetweenSlackMessages - ChronoUnit.MILLIS.between(start, end);
                         if (difference > 0) {
-                            Thread.sleep(difference);
+//                            Thread.sleep(difference);
                         }
                     } catch (Exception ex) {
                     	ex.printStackTrace();
                         errors.add(String.format("Error notifying %s (%s)", this.userEmailsToNames.get(entry.getKey()), entry.getKey()));
                     }
                 });
+        writer.close();
         Unirest.shutdown();
         errors.stream().forEach(System.out::println);
         if (errors.size() > 0) {
