@@ -6,6 +6,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.mockito.Mockito.*;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -79,9 +81,11 @@ public class SlackTest{
 		Field byUsernameField = slack.getClass().getDeclaredField("slackUsersByUsername");
 		byUsernameField.setAccessible(true);
 		SlackTest.slackUsersByUsername = (HashMap<String, String>) byUsernameField.get(slack);
+
+		BufferedWriter bw = new BufferedWriter(new FileWriter("at-names"));
 		
-		SlackTest.slack.notifyUserViaSlack("validname1@test.com", "Hello");
-		SlackTest.slack.notifyUserViaSlack("v2@test.com", "Hello");
+		SlackTest.slack.notifyUserViaSlack("validname1@test.com", "Hello", bw);
+		SlackTest.slack.notifyUserViaSlack("v2@test.com", "Hello", bw);
 	}
 
 	@Test

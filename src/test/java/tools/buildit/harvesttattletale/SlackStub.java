@@ -1,5 +1,6 @@
 package tools.buildit.harvesttattletale;
 
+import java.io.BufferedWriter;
 import java.util.ArrayList;
 import com.google.inject.Singleton;
 import tools.buildit.harvesttattletale.Slack;
@@ -21,7 +22,7 @@ public class SlackStub extends Slack {
 		return this.getSlackUsersCalls;
 	}
 	
-	public void notifyUserViaSlack(String email, String message) {
+	public void notifyUserViaSlack(String email, String message, BufferedWriter bw) {
 		ArrayList<String> params = new ArrayList<>();
 		params.add(email);
 		params.add(message);

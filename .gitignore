@@ -8,3 +8,6 @@ config.json
 .classpath
 /tools
 /bin
+.idea
+at-names
+emails
