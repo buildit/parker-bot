@@ -37,7 +37,7 @@ public class HarvestTest {
 	public static void setUp() throws Exception {
 		// Get the dates right
 		LocalDate now = LocalDate.now();
-		DateTimeFormatter harvestDateFormatter = DateTimeFormatter.ofPattern("YYYYMMdd");
+		DateTimeFormatter harvestDateFormatter = DateTimeFormatter.ofPattern("yyyyMMdd");
         LocalDate sundayTemp = now.with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY));
         LocalDate mondayTemp = sundayTemp.with(TemporalAdjusters.previous(DayOfWeek.MONDAY));
         HarvestTest.sunday = harvestDateFormatter.format(sundayTemp);

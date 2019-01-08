@@ -6,6 +6,7 @@
 package tools.buildit.harvesttattletale;
 
 import com.google.inject.Inject;
+import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 
@@ -44,7 +45,7 @@ public class Harvest {
         LocalDate now = LocalDate.now();
         sunday = now.with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY)) ;
         monday = sunday.with(TemporalAdjusters.previous(DayOfWeek.MONDAY));
-        harvestDateFormatter = DateTimeFormatter.ofPattern("YYYYMMdd");
+        harvestDateFormatter = DateTimeFormatter.ofPattern("yyyyMMdd");
         System.out.println(String.format("Analyzing from %s to %s", this.monday, this.sunday));
     }
     
